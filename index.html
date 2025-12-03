@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fortune Telling Portal</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="logo" data-home data-i18n="logo-title">Fortune Portal</div>
+      <nav class="nav">
+        <a href="#contact" data-i18n="nav-contact">Contact</a>
+        <a href="#settings" data-i18n="nav-settings">Settings</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-content">
+          <h1 data-i18n="hero-title">Explore Your Destiny</h1>
+          <p data-i18n="hero-subtitle">
+            A modern hub for ancient wisdom: Western astrology, Chinese Bazi & Ziwei,
+            Palmistry, Face Reading, Numerology, and the Book of Changes.
+          </p>
+          <div class="hero-actions">
+            <button data-scroll-target="#western-astrology" data-i18n="hero-btn-astrology">
+              Start with Astrology
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="feature-overview">
+        <div class="overview-grid">
+          <div class="overview-card" data-scroll-target="#western-astrology">
+            <h3 data-i18n="card-astrology-title">Astrology</h3>
+            <p data-i18n="card-astrology-text">Discover your zodiac sign and core personality themes.</p>
+          </div>
+          <div class="overview-card" data-scroll-target="#bazi-ziwei">
+            <h3 data-i18n="card-bazi-title">Bazi / Ziwei</h3>
+            <p data-i18n="card-bazi-text">Chinese destiny analysis based on birth pillars and star palaces.</p>
+          </div>
+          <div class="overview-card" data-scroll-target="#palmistry">
+            <h3 data-i18n="card-palm-title">Palm & Face</h3>
+            <p data-i18n="card-palm-text">Symbolic reading of hands and facial features.</p>
+          </div>
+          <div class="overview-card" data-scroll-target="#numerology">
+            <h3 data-i18n="card-numerology-title">Numbers & I Ching</h3>
+            <p data-i18n="card-numerology-text">Life Path numbers and shifting patterns of change.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="western-astrology" class="feature-section">
+        <div class="section-header">
+          <h2>Western Astrology (Zodiac Signs)</h2>
+          <p>Discover your Sun sign and a brief personality overview.</p>
+        </div>
+        <div class="card-grid">
+          <div class="card">
+            <h3>Quick Zodiac Finder</h3>
+            <form id="zodiac-form" class="simple-form">
+              <label>
+                Date of Birth
+                <input type="date" id="zodiac-birthdate" required />
+              </label>
+              <button type="submit">Find My Sign</button>
+            </form>
+            <div id="zodiac-result" class="result-box"></div>
+          </div>
+          <div class="card card-info">
+            <h3>About Western Astrology</h3>
+            <p>
+              Western astrology is based on the tropical zodiac, divided into twelve
+              signs from Aries to Pisces. Each sign reflects a core style of expression,
+              motivation, and temperament.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="bazi-ziwei" class="feature-section">
+        <div class="section-header">
+          <h2>Chinese Bazi / Ziwei</h2>
+          <p>Foundational placeholders for a future detailed Bazi & Ziwei system.</p>
+        </div>
+        <div class="card-grid">
+          <div class="card">
+            <h3>Bazi Overview</h3>
+            <p>
+              Bazi (Four Pillars of Destiny) interprets your life path using year,
+              month, day, and hour of birth, mapping them to Heavenly Stems and Earthly Branches.
+            </p>
+          </div>
+          <div class="card">
+            <h3>Ziwei Doushu Overview</h3>
+            <p>
+              Ziwei Doushu charts positions of key stars in life palaces to describe
+              personality, career, relationships, and fate.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="palmistry" class="feature-section">
+        <div class="section-header">
+          <h2>Palmistry & Face Reading</h2>
+          <p>High-level guides to interpreting physical features symbolically.</p>
+        </div>
+        <div class="card-grid">
+          <div class="card">
+            <h3>Palmistry Basics</h3>
+            <ul>
+              <li>Life line: vitality and general life energy.</li>
+              <li>Heart line: emotional style and relationships.</li>
+              <li>Head line: thinking style and communication.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Face Reading Basics</h3>
+            <ul>
+              <li>Forehead: early life, thinking, and planning.</li>
+              <li>Eyes: spirit, emotional expression, intuition.</li>
+              <li>Mouth & jaw: willpower, persistence, material life.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="numerology" class="feature-section">
+        <div class="section-header">
+          <h2>Numerology</h2>
+          <p>Simple Life Path number calculator.</p>
+        </div>
+        <div class="card-grid">
+          <div class="card">
+            <h3>Life Path Calculator</h3>
+            <form id="numerology-form" class="simple-form">
+              <label>
+                Date of Birth
+                <input type="date" id="numerology-birthdate" required />
+              </label>
+              <button type="submit">Calculate</button>
+            </form>
+            <div id="numerology-result" class="result-box"></div>
+          </div>
+          <div class="card card-info">
+            <h3>About Numerology</h3>
+            <p>
+              Numerology reduces your birth date to a single digit (1–9) to reveal
+              themes in your personality and life lessons. We can later add name
+              numbers and compatibility calculations.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="iching" class="feature-section">
+        <div class="section-header">
+          <h2>I Ching (Book of Changes)</h2>
+          <p>Random hexagram divination prototype.</p>
+        </div>
+        <div class="card-grid">
+          <div class="card">
+            <h3>Simple Hexagram Cast</h3>
+            <button id="iching-cast-btn">Cast a Hexagram</button>
+            <div id="iching-result" class="result-box"></div>
+          </div>
+          <div class="card card-info">
+            <h3>About the I Ching</h3>
+            <p>
+              The I Ching uses sixty-four hexagrams to describe patterns of change.
+              This prototype offers a random cast with brief sample meanings. Later,
+              we can implement traditional coin or yarrow methods and detailed texts.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact" class="feature-section">
+        <div class="section-header">
+          <h2>Contact</h2>
+          <p>Get in touch about readings, collaborations, or feedback.</p>
+        </div>
+        <div class="card-grid">
+          <div class="card">
+            <h3>Email</h3>
+            <p>You can plug in your own email or contact form here.</p>
+          </div>
+          <div class="card">
+            <h3>Social</h3>
+            <p>Add links to your social media or messaging channels.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="settings" class="feature-section">
+        <div class="section-header">
+          <h2 data-i18n="settings-title">Settings</h2>
+          <p data-i18n="settings-subtitle">
+            Configure your preferences such as language, theme, and privacy.
+          </p>
+        </div>
+        <div class="card-grid">
+          <div class="card">
+            <h3 data-i18n="settings-language-title">Language & Theme</h3>
+            <p data-i18n="settings-language-text">
+              Choose your preferred language. Theme toggles can be added here later.
+            </p>
+            <label class="simple-language-label">
+              <span data-i18n="settings-language-label">Language</span>
+              <select id="language-select">
+                <option value="en">English</option>
+                <option value="zh">中文 (Chinese)</option>
+                <option value="mi">Māori</option>
+              </select>
+            </label>
+          </div>
+          <div class="card">
+            <h3>Data & Privacy</h3>
+            <p>Describe how readings are stored and let users clear their history.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>&copy; <span id="year"></span> Fortune Portal. For entertainment and reflection only.</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
+
+

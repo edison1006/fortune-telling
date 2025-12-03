@@ -1,0 +1,346 @@
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, #151530, #050510 55%, #020208);
+  color: #f8f5ff;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 5vw;
+  background: rgba(5, 5, 16, 0.92);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.logo {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  color: #f6e6ff;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* 语言选择器样式 */
+.language-selector {
+  position: relative;
+}
+
+.language-button {
+  padding-inline: 1rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.language-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.4rem);
+  min-width: 160px;
+  padding: 0.6rem 0;
+  border-radius: 0.9rem;
+  background: rgba(10, 10, 25, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(18px);
+  z-index: 100;
+}
+
+.language-menu-item {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  color: #f6e6ff;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease-out;
+}
+
+.language-menu-item:hover {
+  background: rgba(138, 123, 255, 0.18);
+}
+
+.language-menu-item.active {
+  background: rgba(138, 123, 255, 0.25);
+  color: #f6e6ff;
+  font-weight: 600;
+}
+
+.nav {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.9rem;
+}
+
+.account-button {
+  padding-inline: 1.2rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.main {
+  padding: 1.5rem 6vw 3rem;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.hero-card {
+  padding: 2.5rem 2rem;
+  border-radius: 1.4rem;
+  background: radial-gradient(circle at top, rgba(26, 20, 60, 0.95), #050510);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.hero-card h1 {
+  font-size: clamp(2.1rem, 3.4vw, 2.9rem);
+  margin: 0 0 0.8rem;
+  color: #f6e6ff;
+}
+
+.hero-card p {
+  margin: 0;
+  color: #e0ddff;
+  font-size: 1.05rem;
+}
+
+.section {
+  margin-top: 2.4rem;
+  padding: 1.8rem 1.4rem 2rem;
+  border-radius: 1.4rem;
+  background: radial-gradient(circle at top, rgba(26, 20, 60, 0.95), #050510);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.section h2 {
+  margin-top: 0;
+  margin-bottom: 0.4rem;
+  font-size: 1.3rem;
+}
+
+.section p {
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+  color: #c9c4f2;
+  font-size: 0.95rem;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.6rem;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  color: #cbc7f5;
+}
+
+input[type="date"],
+input[type="file"] {
+  background: rgba(4, 4, 18, 0.95);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 0.4rem 0.6rem;
+  color: #f6f3ff;
+  font-size: 0.9rem;
+}
+
+button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 0.45rem 1.1rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  background: linear-gradient(120deg, #8a7bff, #7ee7ff);
+  color: #0c0b16;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.7);
+  transition:
+    transform 0.1s ease-out,
+    box-shadow 0.1s ease-out,
+    opacity 0.15s ease-out;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8);
+  opacity: 0.96;
+}
+
+.result-box {
+  margin-top: 0.7rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: 0.7rem;
+  border: 1px dashed rgba(255, 255, 255, 0.24);
+  font-size: 0.9rem;
+  color: #f2edff;
+  min-height: 2rem;
+  background: radial-gradient(circle at top, rgba(138, 123, 255, 0.18), transparent 60%);
+}
+
+.small {
+  font-size: 0.82rem;
+  color: #a8a4d8;
+  margin-top: 0.4rem;
+}
+
+/* 卡片网格布局 */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+/* 功能卡片样式 */
+.feature-card {
+  padding: 2rem 1.5rem;
+  border-radius: 1.2rem;
+  background: radial-gradient(circle at top, rgba(26, 20, 60, 0.95), #050510);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.3s ease-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 220px;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(138, 123, 255, 0.4);
+  box-shadow: 0 12px 40px rgba(138, 123, 255, 0.2);
+  background: radial-gradient(circle at top, rgba(35, 28, 75, 0.98), #080518);
+}
+
+.card-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 4px 8px rgba(138, 123, 255, 0.3));
+}
+
+.card-title {
+  margin: 0 0 0.6rem;
+  font-size: 1.3rem;
+  color: #f6e6ff;
+  font-weight: 600;
+}
+
+.card-description {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #c9c4f2;
+  line-height: 1.5;
+}
+
+/* 返回按钮样式 */
+.back-button {
+  margin-bottom: 1.5rem;
+  background: rgba(138, 123, 255, 0.15);
+  border: 1px solid rgba(138, 123, 255, 0.3);
+  color: #f6e6ff;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.back-button:hover {
+  background: rgba(138, 123, 255, 0.25);
+  border-color: rgba(138, 123, 255, 0.5);
+  transform: translateY(-1px);
+}
+
+.back-button-header {
+  background: rgba(138, 123, 255, 0.15);
+  border: 1px solid rgba(138, 123, 255, 0.3);
+  color: #f6e6ff;
+  padding: 0.4rem 0.9rem;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.back-button-header:hover {
+  background: rgba(138, 123, 255, 0.25);
+  border-color: rgba(138, 123, 255, 0.5);
+}
+
+@media (max-width: 800px) {
+  .nav {
+    display: none;
+  }
+
+  .header-right {
+    gap: 0.75rem;
+  }
+
+  .main {
+    padding: 1rem 1.25rem 3rem;
+  }
+
+  .hero-card {
+    padding: 2rem 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-card h1 {
+    font-size: 1.8rem;
+  }
+
+  .hero-card p {
+    font-size: 0.95rem;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+    margin-top: 0;
+  }
+
+  .feature-card {
+    min-height: 200px;
+    padding: 1.5rem 1.2rem;
+  }
+
+  .card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .card-title {
+    font-size: 1.2rem;
+  }
+}
+
+
+
+
