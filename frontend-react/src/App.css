@@ -1,0 +1,355 @@
+/* 清新自然的风格 - 浅色主题 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* 清新自然的配色 */
+  --primary-green: #7fb069;
+  --primary-green-light: #a8d5a3;
+  --primary-green-dark: #5a8a4a;
+  --secondary-blue: #6b9bd1;
+  --secondary-blue-light: #a5c5e8;
+  --accent-coral: #f4a261;
+  --accent-coral-light: #f9c784;
+  --background: #fafbf9;
+  --background-light: #ffffff;
+  --text-primary: #2d3436;
+  --text-secondary: #636e72;
+  --text-light: #b2bec3;
+  --border: #dfe6e9;
+  --border-light: #f1f3f5;
+  --shadow: rgba(0, 0, 0, 0.08);
+  --shadow-hover: rgba(0, 0, 0, 0.12);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+  background: var(--background);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header 样式 */
+.header {
+  background: var(--background-light);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--primary-green-dark);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.logo:hover {
+  color: var(--primary-green);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* 按钮样式 */
+.btn {
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--primary-green);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--primary-green-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow-hover);
+}
+
+.btn-secondary {
+  background: var(--background-light);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background: var(--border-light);
+  border-color: var(--primary-green-light);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 语言选择器 */
+.language-selector {
+  position: relative;
+}
+
+.language-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  background: var(--background-light);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px var(--shadow);
+  min-width: 160px;
+  padding: 0.5rem 0;
+  z-index: 1000;
+}
+
+.language-menu-item {
+  display: block;
+  width: 100%;
+  padding: 0.6rem 1rem;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+}
+
+.language-menu-item:hover {
+  background: var(--border-light);
+}
+
+.language-menu-item.active {
+  background: var(--primary-green-light);
+  color: var(--primary-green-dark);
+  font-weight: 500;
+}
+
+/* Main 内容区域 */
+.main {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  width: 100%;
+}
+
+/* Hero 卡片 */
+.hero-card {
+  background: linear-gradient(135deg, var(--primary-green-light) 0%, var(--secondary-blue-light) 100%);
+  border-radius: 16px;
+  padding: 3rem 2.5rem;
+  margin-bottom: 3rem;
+  text-align: center;
+  box-shadow: 0 8px 24px var(--shadow);
+}
+
+.hero-card h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hero-card p {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.95);
+  font-weight: 300;
+}
+
+/* 功能卡片网格 */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.feature-card {
+  background: var(--background-light);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--primary-green);
+  box-shadow: 0 8px 24px var(--shadow-hover);
+  background: linear-gradient(135deg, var(--background-light) 0%, rgba(127, 176, 105, 0.05) 100%);
+}
+
+.card-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 2px 4px var(--shadow));
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.card-description {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* 页面内容 */
+.page-section {
+  background: var(--background-light);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.page-section h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.page-section p {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+/* 表单样式 */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: var(--background-light);
+  color: var(--text-primary);
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary-green);
+  box-shadow: 0 0 0 3px rgba(127, 176, 105, 0.1);
+}
+
+/* 结果框 */
+.result-box {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: var(--border-light);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  min-height: 80px;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+/* 返回按钮 */
+.back-button {
+  margin-bottom: 1.5rem;
+  background: var(--background-light);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.back-button:hover {
+  background: var(--border-light);
+  border-color: var(--primary-green);
+}
+
+/* 响应式设计 */
+@media (max-width: 1024px) {
+  .cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem;
+  }
+
+  .main {
+    padding: 1.5rem 1rem;
+  }
+
+  .hero-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .hero-card h1 {
+    font-size: 2rem;
+  }
+
+  .hero-card p {
+    font-size: 1rem;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .feature-card {
+    min-height: 180px;
+    padding: 1.5rem 1rem;
+  }
+}

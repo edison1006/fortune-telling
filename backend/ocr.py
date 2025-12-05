@@ -54,3 +54,4 @@ async def analyze_image_text(file: UploadFile, mode: Literal["face", "palm"]):
 
 
 
+

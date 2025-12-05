@@ -24,3 +24,4 @@ except Exception as e:
     if hasattr(e, 'response'):
         print(f"Response: {e.response.text}")
 
+

@@ -40,7 +40,10 @@ class BaziPillar(BaseModel):
 
 class BaziResponse(BaseModel):
     year_pillar: BaziPillar
-    # For now we only compute year pillar; later we can extend
+    month_pillar: Optional[BaziPillar] = None
+    day_pillar: Optional[BaziPillar] = None
+    hour_pillar: Optional[BaziPillar] = None
     summary: str
+    interpretation: Optional[str] = None  # AI生成的解读
     raw_input: BaziRequest
 

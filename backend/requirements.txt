@@ -5,6 +5,9 @@ psycopg2-binary
 python-dotenv
 boto3
 python-multipart
+openai
+requests
+
 
 
 
