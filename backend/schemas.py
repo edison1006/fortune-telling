@@ -24,10 +24,18 @@ class ReadingOut(BaseModel):
 
 
 class BaziRequest(BaseModel):
-    """Simple Bazi input: birth date and optional time."""
+    """Simple Bazi input: birth date, optional time, and optional focus."""
 
     birth_date: str  # ISO date string: YYYY-MM-DD
     birth_time: Optional[str] = None  # HH:MM, optional
+    # Focus of analysis:
+    # overall: overall fate / life pattern
+    # wealth:  wealth
+    # career:  career
+    # love:    love / romance
+    # health:  health
+    # family:  family
+    analysis_focus: Optional[str] = None
     user_id: Optional[int] = None
 
 
@@ -36,36 +44,38 @@ class BaziPillar(BaseModel):
     branch: str
     element: str
     animal: Optional[str] = None
-    hidden_stems: Optional[List[str]] = None  # 地支藏干
-    ten_god: Optional[str] = None  # 十神
+    hidden_stems: Optional[List[str]] = None  # Hidden heavenly stems within the Earthly Branch
+    ten_god: Optional[str] = None  # Ten-God relationship relative to the Day Master
 
 
 class ElementAnalysis(BaseModel):
-    """五行分析"""
-    element_count: Dict[str, float]  # 各五行数量
-    dominant_element: Optional[str] = None  # 主导五行
-    missing_elements: List[str] = []  # 缺失的五行
-    element_balance: str = ""  # 五行平衡情况
+    """Five Elements (Wu Xing) analysis."""
+
+    element_count: Dict[str, float]  # Count/weight of each element
+    dominant_element: Optional[str] = None  # Dominant element
+    missing_elements: List[str] = []  # Elements that are relatively weak/absent
+    element_balance: str = ""  # Balance description among the Five Elements
 
 
 class TenGodAnalysis(BaseModel):
-    """十神分析"""
+    """Ten-God (Shi Shen) analysis."""
     year_ten_god: Optional[str] = None
     month_ten_god: Optional[str] = None
-    day_ten_god: str = "日主"  # 日主
+    day_ten_god: str = "Day Master"  # Day Master itself
     hour_ten_god: Optional[str] = None
-    ten_god_summary: str = ""  # 十神总结
+    ten_god_summary: str = ""  # Overall summary of Ten-God distribution
 
 
 class BaziAnalysis(BaseModel):
-    """八字综合分析"""
-    day_master: str  # 日主
-    day_master_element: str  # 日主五行
+    """Overall Bazi structural analysis."""
+
+    day_master: str  # Day Master stem
+    day_master_element: str  # Day Master's element
     element_analysis: ElementAnalysis
     ten_god_analysis: TenGodAnalysis
-    use_god: Optional[str] = None  # 用神
-    avoid_god: Optional[str] = None  # 忌神
-    analysis_summary: str = ""  # 分析总结
+    use_god: Optional[str] = None  # Useful god (Yong Shen)
+    avoid_god: Optional[str] = None  # Unfavorable god (Ji Shen)
+    analysis_summary: str = ""  # Text summary of the analysis
 
 
 class BaziResponse(BaseModel):
@@ -74,7 +84,7 @@ class BaziResponse(BaseModel):
     day_pillar: Optional[BaziPillar] = None
     hour_pillar: Optional[BaziPillar] = None
     summary: str
-    interpretation: Optional[str] = None  # AI生成的解读
-    analysis: Optional[BaziAnalysis] = None  # 详细分析
+    interpretation: Optional[str] = None  # AI-generated interpretation text
+    analysis: Optional[BaziAnalysis] = None  # Detailed structural analysis
     raw_input: BaziRequest
 

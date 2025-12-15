@@ -6,6 +6,7 @@ function BaziPage({ onBack, language }) {
   const t = translations[language] || translations.zh;
   const [birthDate, setBirthDate] = useState("");
   const [birthTime, setBirthTime] = useState("");
+  const [focus, setFocus] = useState("overall"); // overall / wealth / career / love / health / family
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
 
@@ -27,6 +28,7 @@ function BaziPage({ onBack, language }) {
       const payload = {
         birth_date: birthDate,
         birth_time: birthTime && birthTime.trim() ? birthTime.trim() : null,
+        analysis_focus: focus,
       };
       
       // 添加超时控制（30秒）
@@ -167,6 +169,20 @@ function BaziPage({ onBack, language }) {
               value={birthTime}
               onChange={(e) => setBirthTime(e.target.value)}
             />
+          </div>
+          <div className="form-group">
+            <label>{t.baziPage.focusLabel}</label>
+            <select
+              value={focus}
+              onChange={(e) => setFocus(e.target.value)}
+            >
+              <option value="overall">{t.baziPage.focusOverall}</option>
+              <option value="wealth">{t.baziPage.focusWealth}</option>
+              <option value="career">{t.baziPage.focusCareer}</option>
+              <option value="love">{t.baziPage.focusLove}</option>
+              <option value="health">{t.baziPage.focusHealth}</option>
+              <option value="family">{t.baziPage.focusFamily}</option>
+            </select>
           </div>
           <button type="submit" className="btn btn-primary" disabled={loading}>
             {loading ? t.baziPage.calculating : t.baziPage.calculateButton}

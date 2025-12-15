@@ -1,40 +1,40 @@
 # FutureAlgo - React Frontend
 
-清新自然的占卜门户前端应用，使用 React + Vite 构建。
+A clean and nature-inspired fortune-telling portal frontend built with **React + Vite**.
 
-## 功能特性
+## Features
 
-- ✨ 清新自然的 UI 设计
-- 🌍 多语言支持（中文、English、Māori）
-- 🎯 5 大占卜功能：
-  - 西方占星术（星座）
-  - 中国八字
-  - 塔罗牌
-  - 手相/面相
-  - 数字命理
-- 📱 响应式设计，支持移动端
+- ✨ Clean, calming UI design
+- 🌍 Multi-language support (Chinese, English, Māori)
+- 🎯 5 main divination features:
+  - Western astrology (zodiac)
+  - Chinese Bazi
+  - Tarot
+  - Palm / face reading
+  - Numerology
+- 📱 Responsive design, mobile-friendly
 
-## 开发
+## Development
 
 ```bash
-# 安装依赖
+# Install dependencies
 npm install
 
-# 启动开发服务器
+# Start dev server
 npm run dev
 
-# 构建生产版本
+# Build for production
 npm run build
 
-# 预览生产构建
+# Preview production build
 npm run preview
 ```
 
-## 项目结构
+## Project structure
 
 ```
 src/
-  ├── components/      # React 组件
+  ├── components/      # React components
   │   ├── Header.jsx
   │   ├── HomePage.jsx
   │   ├── ZodiacPage.jsx
@@ -42,19 +42,19 @@ src/
   │   ├── TarotPage.jsx
   │   ├── BaziPage.jsx
   │   └── PalmFacePage.jsx
-  ├── utils/          # 工具函数
+  ├── utils/           # Utility functions
   │   ├── translations.js
   │   ├── constants.js
   │   └── helpers.js
-  ├── App.jsx         # 主应用组件
-  ├── App.css         # 主样式文件
-  └── main.jsx        # 入口文件
+  ├── App.jsx          # Root app component
+  ├── App.css          # Main styles
+  └── main.jsx         # Entry file
 ```
 
-## 设计风格
+## Design style
 
-采用清新自然的配色方案：
-- 主色调：绿色系（#7fb069）
-- 辅助色：蓝色系（#6b9bd1）
-- 强调色：珊瑚色（#f4a261）
-- 背景：浅色（#fafbf9）
+The UI uses a fresh, nature-inspired palette:
+- Primary: green tones (`#7fb069`)
+- Secondary: blue tones (`#6b9bd1`)
+- Accent: coral (`#f4a261`)
+- Background: light (`#fafbf9`)

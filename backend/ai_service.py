@@ -1,6 +1,7 @@
 """
-AI服务模块：使用OpenAI API生成八字解读
-如果OpenAI API不可用，可以切换到其他AI服务（如Claude、本地模型等）
+AI service module: generate Bazi interpretations using the OpenAI API.
+If the OpenAI API is not available, this module can be adapted to other AI
+services (for example Claude, local models, etc.).
 """
 import os
 from typing import Optional
@@ -11,23 +12,25 @@ try:
 except ImportError:
     OPENAI_AVAILABLE = False
 
-# 也可以使用其他AI服务，比如通过HTTP请求调用
+# You can also plug in other AI services here (for example via HTTP APIs).
 def generate_bazi_interpretation(
     year_pillar: dict,
     month_pillar: dict,
     day_pillar: dict,
     hour_pillar: Optional[dict] = None,
-    language: str = "zh"
+    language: str = "zh",
+    analysis_focus: Optional[str] = None,
 ) -> Optional[str]:
     """
-    使用AI API生成八字解读
-    
-    参数:
-        year_pillar, month_pillar, day_pillar, hour_pillar: 四柱信息
-        language: 语言代码 (zh, en, mi)
-    
-    返回:
-        解读文本，如果失败则返回None
+    Generate a Bazi (Four Pillars) interpretation using an AI API.
+
+    Args:
+        year_pillar, month_pillar, day_pillar, hour_pillar: Four Pillars info.
+        language: language code (\"zh\", \"en\", \"mi\").
+        analysis_focus: optional focus area for the interpretation.
+
+    Returns:
+        Interpretation text, or None if generation fails.
     """
     # 构建八字信息
     pillars_info = f"年柱：{year_pillar['stem']}{year_pillar['branch']}（{year_pillar['element']}）"
@@ -36,28 +39,85 @@ def generate_bazi_interpretation(
     if hour_pillar:
         pillars_info += f"\n时柱：{hour_pillar['stem']}{hour_pillar['branch']}（{hour_pillar['element']}）"
     
-    # 根据语言选择提示词
+    # 额外的侧重点说明（命运 / 财运 / 事业 / 感情 / 健康 / 家庭等）
+    focus_map_zh = {
+        "career": "在分析时，请在保持整体结构的前提下，更加聚焦于事业、专业发展、职业节奏与合作模式的解读；",
+        "wealth": "在分析时，请在保持整体结构的前提下，更加关注金钱观、资源获取方式、风险承受能力与理财习惯；",
+        "love": "在分析时，请在保持整体结构的前提下，更加聚焦于情感表达方式、亲密关系模式以及与他人相处的节奏；",
+        "health": "在分析时，请在保持整体结构的前提下，更加关注身心能量的消耗与恢复节奏、压力承载方式以及长期健康习惯；",
+        "family": "在分析时，请在保持整体结构的前提下，更加聚焦于家庭氛围、亲子与原生家庭影响，以及伴侣/家庭角色中的互动模式；",
+    }
+    focus_hint_zh = focus_map_zh.get(analysis_focus or "overall", "在分析时，可以兼顾事业、财运与关系，但不必做过于具体的事件预测；")
+
+    # 根据语言选择提示词（结构化、解释性分析，而不是预测）
     prompts = {
-        "zh": f"""请根据以下八字信息，生成一段简洁的命理解读（200字以内）：
+        "zh": f"""你是一名专业、理性且经验丰富的八字分析师，采用结构化八字理论进行分析。
+你的任务不是神秘化预测未来，而是基于四柱、五行、十神和旺衰关系，
+对当事人当前的人生状态、优势结构和潜在挑战进行“解释性分析”。
 
-{pillars_info}
+请严格按照下面的中文小标题，输出五个部分，每部分 2–5 句话：
+1）总体结构判断
+2）五行与日主关系说明
+3）优势倾向
+4）潜在压力或挑战
+5）可执行的调整建议
 
-请从性格特点、运势走向、人生建议三个方面进行解读，语言要通俗易懂，积极正面。""",
-        "en": f"""Please provide a brief Bazi (Four Pillars) interpretation (within 200 words) based on the following information:
+分析时请遵循：
+- {focus_hint_zh}
+- 以日主为核心，结合月令与整体五行分布判断强弱，用“偏强 / 偏弱 / 相对平衡”等表述；
+- 重点解释“为什么会有这样的状态和倾向”，而不是预言具体事件；
+- 所有结论都要能从八字结构（四柱、五行、十神）中找到逻辑依据；
+- 建议要偏向方向性和日常行为调整，而不是保证具体结果；
+- 语气务实、温和、可信，避免夸张、恐吓或宿命论。
 
-{pillars_info}
+四柱信息如下（如时柱缺失，可说明信息有限）：
+{pillars_info}""",
+        "en": f"""You are a professional and experienced Bazi (Four Pillars) analyst.
+Your task is NOT to mystically predict the future, but to give an explanatory analysis
+of the person's current life pattern, strengths and potential challenges,
+based on the structure of the four pillars, five elements and Ten Gods.
 
-Please interpret from three aspects: personality traits, fortune trends, and life advice. Use simple language and be positive.""",
-        "mi": f"""Tēnā koa whakaputa he whakamāramatanga poto mō te Bazi (Ngā Pou e Whā) (ki raro i te 200 kupu) i runga i ngā kōrero e whai ake nei:
+Please output FIVE sections (2–5 sentences each) with these headings:
+1) Overall structural assessment
+2) Relationship between the Day Master and the Five Elements
+3) Strengths and supportive tendencies
+4) Potential pressures or challenges
+5) Practical adjustment suggestions
 
-{pillars_info}
+Guidelines:
+- Center the Day Master and judge relative strength (slightly strong / slightly weak / relatively balanced), using the overall five-element distribution;
+- Focus on explaining WHY certain patterns or tendencies appear, rather than predicting concrete events;
+- Every conclusion should be logically grounded in the chart structure (stems, branches, five elements, Ten Gods);
+- Suggestions should be directional (mindset, behavior, focus), not promises of specific outcomes;
+- Keep the tone steady, warm and non-fatalistic.
 
-Tēnā koa whakamārama mai i ētahi taha e toru: ngā āhuatanga whaiaro, ngā huarahi o te waimarie, me ngā tohutohu ora. Whakamahia te reo māmā, kia pai hoki te wairua."""
+Four Pillars:
+{pillars_info}""",
+        "mi": f"""He mātanga koe mō te tātari Bazi (Ngā Pou e Whā), he tōtika, he whai wheako.
+Ehara tō mahi i te matapae makutu i te āpōpō, engari he whakamārama i ngā tauira oranga o nāianei,
+ngā kaha me ngā wero pea, i runga i te hanganga o ngā pou, ngā rima o ngā mea, me ngā Atua Tekau.
+
+Tēnā koa tukuna he rīpoata ki ngā wāhanga e rima, 2–5 rerenga ia wāhanga:
+1) Te arotake whānui o te hanganga
+2) Te hononga o te Rangatira Rā ki ngā Rima o ngā mea
+3) Ngā kaha me ngā ia tautoko
+4) Ngā pēhitanga, ngā wero pea
+5) Ngā tohutohu whakatikatika ka taea te mahi
+
+Arataki:
+- Arotahi ki te Rangatira Rā, me te kaha, te ngoikore rānei, me te taurite o ngā Rima o ngā mea;
+- Whakamārama “he aha i pēnei ai te āhua”, kaua e matapae kaupapa motuhake ā mua;
+- Me hono ia whakatau ki te hanganga o te mahere (ngā pou, ngā Rima o ngā mea, me ngā Atua Tekau);
+- Me whakaatu tohutohu aronga noa mō te whanonga me te wairua, kaua e whakapūmau hua;
+- Kia mārie te reo, kaua e whakamataku, kaua hoki e hāngai ki te matapōkere.
+
+Ngā Pou e Whā:
+{pillars_info}"""
     }
     
     prompt = prompts.get(language, prompts["zh"])
     
-    # 方法1: 使用OpenAI API
+    # Method 1: use the OpenAI API
     if OPENAI_AVAILABLE:
         api_key = os.getenv("OPENAI_API_KEY")
         if api_key:
@@ -77,14 +137,21 @@ Tēnā koa whakamārama mai i ētahi taha e toru: ngā āhuatanga whaiaro, ngā 
             except Exception as e:
                 print(f"OpenAI API error: {e}")
     
-    # 方法2: 使用HTTP请求调用其他AI服务（示例：可以替换为其他API）
-    # 这里可以添加对其他AI服务的支持，比如：
+    # Method 2: use HTTP requests to call other AI services (examples):
     # - Anthropic Claude API
-    # - 本地部署的模型
-    # - 其他AI服务提供商
+    # - locally deployed models
+    # - other AI providers
     
-    # 方法3: 如果AI服务不可用，返回基础解读
-    return generate_basic_interpretation(year_pillar, month_pillar, day_pillar, hour_pillar, language)
+    # Method 3: if no AI service is available, fall back to a basic interpretation
+    return generate_basic_interpretation(
+        year_pillar,
+        month_pillar,
+        day_pillar,
+        hour_pillar,
+        language=language,
+        analysis=None,
+        analysis_focus=analysis_focus,
+    )
 
 
 def generate_basic_interpretation(
@@ -93,7 +160,8 @@ def generate_basic_interpretation(
     day_pillar: dict,
     hour_pillar: Optional[dict] = None,
     language: str = "zh",
-    analysis: Optional[dict] = None
+    analysis: Optional[dict] = None,
+    analysis_focus: Optional[str] = None,
 ) -> str:
     """
     生成基础的八字解读（不依赖AI API）
@@ -118,37 +186,136 @@ def generate_basic_interpretation(
         element_count = element_analysis.get('element_count', element_count)
         element_balance = element_analysis.get('element_balance', '')
         ten_god_summary = ten_god_analysis.get('ten_god_summary', '')
+        dominant_element = element_analysis.get('dominant_element')
+        missing_elements = element_analysis.get('missing_elements', [])
     else:
         element_balance = ''
         ten_god_summary = ''
         use_god = None
         avoid_god = None
+        dominant_element = None
+        missing_elements = []
+
+    # 为结构化解读准备一些描述性文本（偏解释，不做具体预言）
+    # 日主强弱与五行倾向
+    if element_balance.startswith("五行较为平衡"):
+        structure_comment_zh = "整体结构相对均衡，性格与能力的不同面向比较容易同时展开。"
+    elif element_balance.startswith("五行略有偏颇"):
+        structure_comment_zh = "命局在某一两个方向上略有侧重，容易在特定领域更投入或更用力。"
+    elif element_balance:
+        structure_comment_zh = "命局五行力量分布对比明显，容易呈现出比较鲜明的性格和人生节奏。"
+    else:
+        structure_comment_zh = "整体结构呈现出一定的侧重，需要结合个人实际体验来理解。"
+
+    # 主导五行和缺失五行说明
+    if dominant_element:
+        dominant_zh = f"当前命局中，{dominant_element}行力量相对突出，对思维方式和处事风格影响较大。"
+    else:
+        dominant_zh = "命局中暂未看到某一单一五行绝对占优，更像是多种特质并存。"
+
+    if missing_elements:
+        missing_zh = f"相对而言，{''.join(missing_elements)}行力量偏少，相关主题往往需要主动经营和学习。"
+    else:
+        missing_zh = "五行并不存在完全缺失，更像是轻重有别，而非全无。"
+
+    # 用神、忌神解释
+    if use_god:
+        use_god_zh = f"在命理角度，{use_god}行所代表的品质，更适合作为你长期刻意培养和依靠的方向。"
+    else:
+        use_god_zh = "具体用神还需要结合大运流年和现实处境综合判断。"
+
+    if avoid_god:
+        avoid_god_zh = f"而{avoid_god}行相关的能量，如果用力过度，容易放大压力或消耗，需要保持节制。"
+    else:
+        avoid_god_zh = "暂时看不到特别需要刻意回避的单一能量，更重要的是保持整体平衡。"
     
-    # 基础解读模板
+    # 根据分析侧重点（overall / wealth / career / love / health / family）调整中文部分的关注点
+    focus = analysis_focus or "overall"
+    if focus == "career":
+        focus_adv_zh = (
+            "在事业与专业发展上，你的命局结构支持你通过长期积累来建立专业信任，适合在相对稳定、需要持续深耕的领域发力。"
+        )
+        focus_challenge_zh = (
+            "在职业节奏或角色转换时，可能会对不确定性和环境变化更敏感，需要给自己留出适应和过渡的空间。"
+        )
+        focus_advice_zh = (
+            "在工作选择上，更适合寻找既能发挥核心能力、又允许渐进式成长的路径，同时避免过度透支精力去迎合外在评价。"
+        )
+    elif focus == "wealth":
+        focus_adv_zh = (
+            "在财富与资源层面，这种五行配置有利于你通过稳健经营、长期规划来累积成果，而不是完全依赖短期运气。"
+        )
+        focus_challenge_zh = (
+            "在金钱、安全感或资源分配上，可能会有时出现“要更稳”与“想更快”之间的拉扯，需要留意情绪化决策。"
+        )
+        focus_advice_zh = (
+            "更适合建立一套自己认可的理财与消费原则，用小步长期执行的方式来降低焦虑，而不是频繁大幅度调整策略。"
+        )
+    elif focus == "love":
+        focus_adv_zh = (
+            "在人际与情感关系中，你的命局结构让你在表达关怀、给予支持或陪伴他人时，往往显得真诚而有分寸。"
+        )
+        focus_challenge_zh = (
+            "在亲密关系里，你可能一方面期待稳定和可靠，另一方面又希望保留一定的个人空间，这容易带来内在矛盾感。"
+        )
+        focus_advice_zh = (
+            "更适合用坦诚沟通去说明自己的节奏和边界，让对方理解你的在乎方式，而不是用过度付出或过度退缩来试探关系。"
+        )
+    elif focus == "health":
+        focus_adv_zh = (
+            "在身心健康与精力管理方面，这种命局结构如果运用得当，往往能形成比较稳定的作息与恢复节奏，有利于长期维持战斗力。"
+        )
+        focus_challenge_zh = (
+            "当压力累积而未被及时疏导时，你可能不容易立刻察觉自己已经透支，容易用“再坚持一下”的方式掩盖疲惫感。"
+        )
+        focus_advice_zh = (
+            "更适合用“可持续”的标准来安排工作与生活节奏，给自己设定固定的休整窗口，并尝试用运动、睡眠和情绪表达来做温和的排压。"
+        )
+    elif focus == "family":
+        focus_adv_zh = (
+            "在家庭与亲密关系层面，你的命局结构让你在承担责任、照顾他人感受时具有一定的稳定性和耐心，适合经营长期关系。"
+        )
+        focus_challenge_zh = (
+            "在原生家庭影响、代际期待或家庭角色分工上，你可能会在“照顾自己”与“照顾他人”之间摇摆，需要学会更清晰地表达真实需求。"
+        )
+        focus_advice_zh = (
+            "建议在家庭议题上，逐步建立“可以被讨论”的空间，用商量而不是自我牺牲的方式来维系关系，让关爱更有弹性、也更可持续。"
+        )
+    else:
+        # overall：偏综合视角
+        focus_adv_zh = (
+            "整体来看，你更适合在熟悉且可控的节奏中，持续打磨自己的优势，让人生路径呈现出“稳中有进”的趋势。"
+        )
+        focus_challenge_zh = (
+            "当生活节奏被外力打乱，或者短期内需要面对多重任务时，你可能会感到心力被拉扯，需要更刻意地学会取舍。"
+        )
+        focus_advice_zh = (
+            "通过给自己设定清晰的优先级、保留固定的休整时间，可以让你在稳定的基础上逐步扩展新的可能性。"
+        )
+
+    # 基础解读模板（与前端业务逻辑一致，偏解释性与结构化，并按侧重点微调）
     interpretations = {
-        "zh": f"""根据您的八字分析：
+        "zh": f"""【总体结构判断】
+整体来看，日主属{day_pillar['element']}，在这个命局中与其他五行之间形成了「{element_balance or '有侧重但仍需结合实际体验'}」的格局。{structure_comment_zh}
 
-【四柱信息】
-年柱：{year_pillar['stem']}{year_pillar['branch']}年（{year_pillar['element']}，{year_pillar.get('animal', '')}）
-月柱：{month_pillar['stem']}{month_pillar['branch']}月（{month_pillar['element']}）
-日柱：{day_pillar['stem']}{day_pillar['branch']}日（{day_pillar['element']}）【日主】
-{f"时柱：{hour_pillar['stem']}{hour_pillar['branch']}时（{hour_pillar['element']}）" if hour_pillar else "时柱：未提供"}
+【五行与日主关系说明】
+从五行分布看：{', '.join([f'{k}行约{int(v) if v == int(v) else v:.1f}个' for k, v in element_count.items()])}。{dominant_zh}{(' ' + missing_zh) if missing_zh else ''}
+日主为{day_pillar['element']}，通常代表{get_personality_trait(day_pillar['element'], 'zh')}这一类特质，会成为你做选择和看世界的重要出发点。
 
-【五行分析】
-五行分布：{', '.join([f'{k}行{int(v) if v == int(v) else v:.1f}个' for k, v in element_count.items()])}
-五行平衡：{element_balance if element_balance else '需进一步分析'}
+【优势倾向】
+1. 在结构上，你更容易依赖{day_pillar['element']}及其相关的思维和行为方式，在熟悉的领域里表现出稳定的优势。
+2. 十神配置显示：{ten_god_summary if ten_god_summary else "各类角色能量比较均衡，你在不同情境中具备切换角色的潜力。"}
+3. {focus_adv_zh}
 
-【十神分析】
-{ten_god_summary if ten_god_summary else '十神分布较为均衡'}
+【潜在压力或挑战】
+1. 当某一两种五行长期被过度使用时（例如当前命局中相对偏重的部分），容易出现「惯性太强、弹性不足」的状况，需要适时调整节奏。
+2. {missing_zh}
+3. {focus_challenge_zh}
 
-【性格特点】
-{year_pillar['stem']}{year_pillar['branch']}年出生的人，通常具有坚韧不拔的性格。{day_pillar['element']}日主的人，{get_personality_trait(day_pillar['element'], 'zh')}。
-
-【用神忌神】
-{f"用神：{use_god}，忌神：{avoid_god if avoid_god else '无'}" if use_god else "需结合大运流年进一步分析"}
-
-【运势建议】
-保持内心的平衡，顺应自然规律，在合适的时机把握机会。""",
+【可执行的调整建议】
+1. 命理上的用神方向：{use_god_zh}
+2. 需要温和留意的部分：{avoid_god_zh}
+3. {focus_advice_zh}""",
         "en": f"""Based on your Bazi analysis:
 
 【Four Pillars】

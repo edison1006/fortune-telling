@@ -8,20 +8,20 @@ from fastapi import Depends, FastAPI, File, UploadFile, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 
-# 支持相对导入和绝对导入
+# Support both relative and absolute imports
 try:
     from . import models, schemas
     from .db import Base, engine, get_db
     from .ocr import analyze_image_text
 except ImportError:
-    # 如果相对导入失败，使用绝对导入
+    # If relative imports fail, fall back to absolute imports
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import models
     import schemas
     from db import Base, engine, get_db
     from ocr import analyze_image_text
 
-# 尝试导入AI服务，如果失败也不影响基本功能
+# Try to import the AI service; if it fails the core API still works
 try:
     try:
         from .ai_service import generate_bazi_interpretation
@@ -32,7 +32,7 @@ except ImportError:
     AI_SERVICE_AVAILABLE = False
     print("Warning: AI service not available, will use basic interpretation")
 
-# 尝试创建数据库表，如果失败也不影响API功能
+# Try to create database tables; if this fails the API can still respond
 try:
     Base.metadata.create_all(bind=engine)
 except Exception as db_init_error:
@@ -77,64 +77,64 @@ def list_readings(db: Session = Depends(get_db)):
 HEAVENLY_STEMS = ["甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"]
 EARTHLY_BRANCHES = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"]
 FIVE_ELEMENTS = {
-    "甲": "木",
-    "乙": "木",
-    "丙": "火",
-    "丁": "火",
-    "戊": "土",
-    "己": "土",
-    "庚": "金",
-    "辛": "金",
-    "壬": "水",
-    "癸": "水",
+    "甲": "Wood",
+    "乙": "Wood",
+    "丙": "Fire",
+    "丁": "Fire",
+    "戊": "Earth",
+    "己": "Earth",
+    "庚": "Metal",
+    "辛": "Metal",
+    "壬": "Water",
+    "癸": "Water",
 }
 CHINESE_ZODIAC = [
-    "鼠",
-    "牛",
-    "虎",
-    "兔",
-    "龙",
-    "蛇",
-    "马",
-    "羊",
-    "猴",
-    "鸡",
-    "狗",
-    "猪",
+    "Rat",
+    "Ox",
+    "Tiger",
+    "Rabbit",
+    "Dragon",
+    "Snake",
+    "Horse",
+    "Goat",
+    "Monkey",
+    "Rooster",
+    "Dog",
+    "Pig",
 ]
 
-# 地支藏干表（本气、中气、余气）
+# Mapping Earthly Branch -> hidden Heavenly Stems (principal, middle, remaining)
 BRANCH_HIDDEN_STEMS = {
-    "子": ["癸"],  # 子：癸水
-    "丑": ["己", "癸", "辛"],  # 丑：己土（本气）、癸水（中气）、辛金（余气）
-    "寅": ["甲", "丙", "戊"],  # 寅：甲木（本气）、丙火（中气）、戊土（余气）
-    "卯": ["乙"],  # 卯：乙木
-    "辰": ["戊", "乙", "癸"],  # 辰：戊土（本气）、乙木（中气）、癸水（余气）
-    "巳": ["丙", "戊", "庚"],  # 巳：丙火（本气）、戊土（中气）、庚金（余气）
-    "午": ["丁", "己"],  # 午：丁火（本气）、己土（中气）
-    "未": ["己", "丁", "乙"],  # 未：己土（本气）、丁火（中气）、乙木（余气）
-    "申": ["庚", "壬", "戊"],  # 申：庚金（本气）、壬水（中气）、戊土（余气）
-    "酉": ["辛"],  # 酉：辛金
-    "戌": ["戊", "辛", "丁"],  # 戌：戊土（本气）、辛金（中气）、丁火（余气）
-    "亥": ["壬", "甲"],  # 亥：壬水（本气）、甲木（中气）
+    "子": ["癸"],  # Zi: Gui (Water)
+    "丑": ["己", "癸", "辛"],  # Chou: Ji (Earth, principal), Gui (Water, middle), Xin (Metal, remaining)
+    "寅": ["甲", "丙", "戊"],  # Yin: Jia (Wood), Bing (Fire), Wu (Earth)
+    "卯": ["乙"],  # Mao: Yi (Wood)
+    "辰": ["戊", "乙", "癸"],  # Chen: Wu (Earth), Yi (Wood), Gui (Water)
+    "巳": ["丙", "戊", "庚"],  # Si: Bing (Fire), Wu (Earth), Geng (Metal)
+    "午": ["丁", "己"],  # Wu: Ding (Fire), Ji (Earth)
+    "未": ["己", "丁", "乙"],  # Wei: Ji (Earth), Ding (Fire), Yi (Wood)
+    "申": ["庚", "壬", "戊"],  # Shen: Geng (Metal), Ren (Water), Wu (Earth)
+    "酉": ["辛"],  # You: Xin (Metal)
+    "戌": ["戊", "辛", "丁"],  # Xu: Wu (Earth), Xin (Metal), Ding (Fire)
+    "亥": ["壬", "甲"],  # Hai: Ren (Water), Jia (Wood)
 }
 
-# 十神对照表（以日主为基准）
+# Ten-God relationship table (relative to the Day Master)
 TEN_GODS = {
-    "比肩": "same",  # 同我同性
-    "劫财": "same_yin_yang",  # 同我异性
-    "食神": "output_same",  # 我生同性
-    "伤官": "output_diff",  # 我生异性
-    "偏财": "controlled_same",  # 我克同性
-    "正财": "controlled_diff",  # 我克异性
-    "七杀": "control_same",  # 克我同性
-    "正官": "control_diff",  # 克我异性
-    "偏印": "generate_same",  # 生我同性
-    "正印": "generate_diff",  # 生我异性
+    "比肩": "same",  # Same element, same polarity (peer / companion)
+    "劫财": "same_yin_yang",  # Same element, opposite polarity
+    "食神": "output_same",  # Day Master produces this, same polarity (output/resourcefulness)
+    "伤官": "output_diff",  # Day Master produces this, opposite polarity
+    "偏财": "controlled_same",  # Day Master controls this, same polarity (indirect wealth)
+    "正财": "controlled_diff",  # Day Master controls this, opposite polarity (direct wealth)
+    "七杀": "control_same",  # This controls Day Master, same polarity (Seven Killings)
+    "正官": "control_diff",  # This controls Day Master, opposite polarity (Direct Officer)
+    "偏印": "generate_same",  # This produces Day Master, same polarity (Indirect Resource)
+    "正印": "generate_diff",  # This produces Day Master, opposite polarity (Direct Resource)
 }
 
-# 五行生克关系
-ELEMENT_GENERATION = {  # 生：木生火，火生土，土生金，金生水，水生木
+# Five Elements generating cycle
+ELEMENT_GENERATION = {  # Generate: Wood -> Fire -> Earth -> Metal -> Water -> Wood
     "木": "火",
     "火": "土",
     "土": "金",
@@ -142,7 +142,7 @@ ELEMENT_GENERATION = {  # 生：木生火，火生土，土生金，金生水，
     "水": "木",
 }
 
-ELEMENT_CONQUEST = {  # 克：木克土，土克水，水克火，火克金，金克木
+ELEMENT_CONQUEST = {  # Control: Wood controls Earth, Earth controls Water, Water controls Fire, Fire controls Metal, Metal controls Wood
     "木": "土",
     "土": "水",
     "水": "火",
@@ -539,6 +539,14 @@ def calculate_bazi(payload: schemas.BaziRequest, db: Session = Depends(get_db)):
             analysis_summary=analysis_summary
         )
 
+        # 准备分析数据字典，用于解读函数（包含五行、十神、用神/忌神等）
+        analysis_dict = {
+            'element_analysis': element_analysis.dict(),
+            'ten_god_analysis': ten_god_analysis.dict(),
+            'use_god': use_god,
+            'avoid_god': avoid_god
+        }
+
         # 生成AI解读（可选，如果AI服务不可用则使用基础解读）
         interpretation = None
         if AI_SERVICE_AVAILABLE:
@@ -549,7 +557,8 @@ def calculate_bazi(payload: schemas.BaziRequest, db: Session = Depends(get_db)):
                     month_pillar.dict(),
                     day_pillar.dict(),
                     hour_pillar.dict() if hour_pillar else None,
-                    language="zh"  # 可以根据请求参数调整
+                    language="zh",  # 可以根据请求参数调整
+                    analysis_focus=payload.analysis_focus,
                 )
             except Exception as ai_error:
                 print(f"Warning: Failed to generate AI interpretation: {ai_error}")
@@ -582,7 +591,17 @@ def calculate_bazi(payload: schemas.BaziRequest, db: Session = Depends(get_db)):
                     day_pillar.dict(),
                     hour_pillar.dict() if hour_pillar else None,
                     language="zh",
-                    analysis=analysis_dict
+                    analysis=analysis_dict,
+                    analysis_focus=payload.analysis_focus,
+                )
+                interpretation = generate_basic_interpretation(
+                    year_pillar.dict(),
+                    month_pillar.dict(),
+                    day_pillar.dict(),
+                    hour_pillar.dict() if hour_pillar else None,
+                    language="zh",
+                    analysis=analysis_dict,
+                    analysis_focus=payload.analysis_focus,
                 )
             except Exception:
                 # 最后的fallback

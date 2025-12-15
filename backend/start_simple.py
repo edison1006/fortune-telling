@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-简化的后端启动脚本，不依赖数据库
-直接运行: python start_simple.py
+Simplified backend start script that does not require a database.
+Run directly: python start_simple.py
 """
 import sys
 import os
 
-# 添加当前目录到路径
+# Add current directory to sys.path so that local imports work
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 if __name__ == "__main__":
