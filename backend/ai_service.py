@@ -92,7 +92,8 @@ def generate_basic_interpretation(
     month_pillar: dict,
     day_pillar: dict,
     hour_pillar: Optional[dict] = None,
-    language: str = "zh"
+    language: str = "zh",
+    analysis: Optional[dict] = None
 ) -> str:
     """
     生成基础的八字解读（不依赖AI API）
@@ -107,29 +108,93 @@ def generate_basic_interpretation(
     for elem in elements:
         element_count[elem] = element_count.get(elem, 0) + 1
     
+    # 如果有详细分析数据，使用它
+    if analysis:
+        element_analysis = analysis.get('element_analysis', {})
+        ten_god_analysis = analysis.get('ten_god_analysis', {})
+        use_god = analysis.get('use_god')
+        avoid_god = analysis.get('avoid_god')
+        
+        element_count = element_analysis.get('element_count', element_count)
+        element_balance = element_analysis.get('element_balance', '')
+        ten_god_summary = ten_god_analysis.get('ten_god_summary', '')
+    else:
+        element_balance = ''
+        ten_god_summary = ''
+        use_god = None
+        avoid_god = None
+    
     # 基础解读模板
     interpretations = {
         "zh": f"""根据您的八字分析：
 
-【五行分布】您的命局中，{'、'.join([f'{k}行有{v}个' for k, v in element_count.items()])}。
+【四柱信息】
+年柱：{year_pillar['stem']}{year_pillar['branch']}年（{year_pillar['element']}，{year_pillar.get('animal', '')}）
+月柱：{month_pillar['stem']}{month_pillar['branch']}月（{month_pillar['element']}）
+日柱：{day_pillar['stem']}{day_pillar['branch']}日（{day_pillar['element']}）【日主】
+{f"时柱：{hour_pillar['stem']}{hour_pillar['branch']}时（{hour_pillar['element']}）" if hour_pillar else "时柱：未提供"}
 
-【性格特点】{year_pillar['stem']}{year_pillar['branch']}年出生的人，通常具有坚韧不拔的性格。{day_pillar['element']}日主的人，{get_personality_trait(day_pillar['element'], 'zh')}。
+【五行分析】
+五行分布：{', '.join([f'{k}行{int(v) if v == int(v) else v:.1f}个' for k, v in element_count.items()])}
+五行平衡：{element_balance if element_balance else '需进一步分析'}
 
-【运势建议】保持内心的平衡，顺应自然规律，在合适的时机把握机会。""",
+【十神分析】
+{ten_god_summary if ten_god_summary else '十神分布较为均衡'}
+
+【性格特点】
+{year_pillar['stem']}{year_pillar['branch']}年出生的人，通常具有坚韧不拔的性格。{day_pillar['element']}日主的人，{get_personality_trait(day_pillar['element'], 'zh')}。
+
+【用神忌神】
+{f"用神：{use_god}，忌神：{avoid_god if avoid_god else '无'}" if use_god else "需结合大运流年进一步分析"}
+
+【运势建议】
+保持内心的平衡，顺应自然规律，在合适的时机把握机会。""",
         "en": f"""Based on your Bazi analysis:
 
-【Five Elements Distribution】In your chart, {', '.join([f'{v} {k} elements' for k, v in element_count.items()])}.
+【Four Pillars】
+Year: {year_pillar['stem']}{year_pillar['branch']} ({year_pillar['element']}, {year_pillar.get('animal', '')})
+Month: {month_pillar['stem']}{month_pillar['branch']} ({month_pillar['element']})
+Day: {day_pillar['stem']}{day_pillar['branch']} ({day_pillar['element']}) [Day Master]
+{f"Hour: {hour_pillar['stem']}{hour_pillar['branch']} ({hour_pillar['element']})" if hour_pillar else "Hour: Not provided"}
 
-【Personality Traits】People born in {year_pillar['stem']}{year_pillar['branch']} year typically have a resilient character. Those with {day_pillar['element']} as day master are {get_personality_trait(day_pillar['element'], 'en')}.
+【Five Elements Analysis】
+Distribution: {', '.join([f'{int(v) if v == int(v) else v:.1f} {k} elements' for k, v in element_count.items()])}
+Balance: {element_balance if element_balance else 'Further analysis needed'}
 
-【Fortune Advice】Maintain inner balance, follow natural laws, and seize opportunities at the right time.""",
+【Ten Gods Analysis】
+{ten_god_summary if ten_god_summary else 'Ten gods distribution is relatively balanced'}
+
+【Personality Traits】
+People born in {year_pillar['stem']}{year_pillar['branch']} year typically have a resilient character. Those with {day_pillar['element']} as day master are {get_personality_trait(day_pillar['element'], 'en')}.
+
+【Use God & Avoid God】
+{f"Use God: {use_god}, Avoid God: {avoid_god if avoid_god else 'None'}" if use_god else "Further analysis with luck cycles needed"}
+
+【Fortune Advice】
+Maintain inner balance, follow natural laws, and seize opportunities at the right time.""",
         "mi": f"""I runga i tō tātari Bazi:
 
-【Te Whakawhitinga o ngā Rima】I tō mahere, {', '.join([f'{v} ngā {k}' for k, v in element_count.items()])}.
+【Ngā Pou e Whā】
+Tau: {year_pillar['stem']}{year_pillar['branch']} ({year_pillar['element']}, {year_pillar.get('animal', '')})
+Marama: {month_pillar['stem']}{month_pillar['branch']} ({month_pillar['element']})
+Rā: {day_pillar['stem']}{day_pillar['branch']} ({day_pillar['element']}) [Rangatira Rā]
+{f"Hāora: {hour_pillar['stem']}{hour_pillar['branch']} ({hour_pillar['element']})" if hour_pillar else "Hāora: Kāore i whakaratoa"}
 
-【Ngā Āhuatanga Whaiaro】Ko ngā tāngata i whānau mai i te tau {year_pillar['stem']}{year_pillar['branch']}, he āhua pakari tō rātou whaiaro. Ko ngā tāngata me te {day_pillar['element']} hei rangatira rā, {get_personality_trait(day_pillar['element'], 'mi')}.
+【Te Tātari o ngā Rima】
+Te whakawhitinga: {', '.join([f'{int(v) if v == int(v) else v:.1f} ngā {k}' for k, v in element_count.items()])}
+Te taurite: {element_balance if element_balance else 'Me tātari anō'}
 
-【Ngā Tohutohu Waimarie】Kia mau ki te taurite o roto, whai i ngā ture taiao, ka hopu i ngā whaiwāhitanga i te wā tika."""
+【Te Tātari o ngā Atua Tekau】
+{ten_god_summary if ten_god_summary else 'He taurite te whakawhitinga o ngā atua tekau'}
+
+【Ngā Āhuatanga Whaiaro】
+Ko ngā tāngata i whānau mai i te tau {year_pillar['stem']}{year_pillar['branch']}, he āhua pakari tō rātou whaiaro. Ko ngā tāngata me te {day_pillar['element']} hei rangatira rā, {get_personality_trait(day_pillar['element'], 'mi')}.
+
+【Te Atua Whakamahi me te Atua Pare】
+{f"Te Atua Whakamahi: {use_god}, Te Atua Pare: {avoid_god if avoid_god else 'Kore'}" if use_god else "Me tātari anō me ngā hurihanga waimarie"}
+
+【Ngā Tohutohu Waimarie】
+Kia mau ki te taurite o roto, whai i ngā ture taiao, ka hopu i ngā whaiwāhitanga i te wā tika."""
     }
     
     return interpretations.get(language, interpretations["zh"])

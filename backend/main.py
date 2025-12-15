@@ -89,6 +89,53 @@ CHINESE_ZODIAC = [
     "猪",
 ]
 
+# 地支藏干表（本气、中气、余气）
+BRANCH_HIDDEN_STEMS = {
+    "子": ["癸"],  # 子：癸水
+    "丑": ["己", "癸", "辛"],  # 丑：己土（本气）、癸水（中气）、辛金（余气）
+    "寅": ["甲", "丙", "戊"],  # 寅：甲木（本气）、丙火（中气）、戊土（余气）
+    "卯": ["乙"],  # 卯：乙木
+    "辰": ["戊", "乙", "癸"],  # 辰：戊土（本气）、乙木（中气）、癸水（余气）
+    "巳": ["丙", "戊", "庚"],  # 巳：丙火（本气）、戊土（中气）、庚金（余气）
+    "午": ["丁", "己"],  # 午：丁火（本气）、己土（中气）
+    "未": ["己", "丁", "乙"],  # 未：己土（本气）、丁火（中气）、乙木（余气）
+    "申": ["庚", "壬", "戊"],  # 申：庚金（本气）、壬水（中气）、戊土（余气）
+    "酉": ["辛"],  # 酉：辛金
+    "戌": ["戊", "辛", "丁"],  # 戌：戊土（本气）、辛金（中气）、丁火（余气）
+    "亥": ["壬", "甲"],  # 亥：壬水（本气）、甲木（中气）
+}
+
+# 十神对照表（以日主为基准）
+TEN_GODS = {
+    "比肩": "same",  # 同我同性
+    "劫财": "same_yin_yang",  # 同我异性
+    "食神": "output_same",  # 我生同性
+    "伤官": "output_diff",  # 我生异性
+    "偏财": "controlled_same",  # 我克同性
+    "正财": "controlled_diff",  # 我克异性
+    "七杀": "control_same",  # 克我同性
+    "正官": "control_diff",  # 克我异性
+    "偏印": "generate_same",  # 生我同性
+    "正印": "generate_diff",  # 生我异性
+}
+
+# 五行生克关系
+ELEMENT_GENERATION = {  # 生：木生火，火生土，土生金，金生水，水生木
+    "木": "火",
+    "火": "土",
+    "土": "金",
+    "金": "水",
+    "水": "木",
+}
+
+ELEMENT_CONQUEST = {  # 克：木克土，土克水，水克火，火克金，金克木
+    "木": "土",
+    "土": "水",
+    "水": "火",
+    "火": "金",
+    "金": "木",
+}
+
 
 def compute_year_pillar(year: int) -> schemas.BaziPillar:
     """
@@ -220,6 +267,173 @@ def compute_hour_pillar(day_stem: str, hour: int) -> schemas.BaziPillar:
     return schemas.BaziPillar(stem=stem, branch=branch, element=element, animal=None)
 
 
+def get_hidden_stems(branch: str) -> list:
+    """获取地支藏干"""
+    return BRANCH_HIDDEN_STEMS.get(branch, [])
+
+
+def get_ten_god(day_stem: str, target_stem: str) -> str:
+    """
+    计算十神（以日主为基准）
+    日主与目标天干的关系
+    """
+    day_element = FIVE_ELEMENTS[day_stem]
+    target_element = FIVE_ELEMENTS[target_stem]
+    
+    # 判断阴阳：甲丙戊庚壬为阳，乙丁己辛癸为阴
+    day_is_yang = day_stem in ["甲", "丙", "戊", "庚", "壬"]
+    target_is_yang = target_stem in ["甲", "丙", "戊", "庚", "壬"]
+    same_yin_yang = day_is_yang == target_is_yang
+    
+    if day_stem == target_stem:
+        return "比肩"
+    
+    if day_element == target_element:
+        return "劫财"
+    
+    # 我生：日主生目标
+    if ELEMENT_GENERATION.get(day_element) == target_element:
+        return "食神" if same_yin_yang else "伤官"
+    
+    # 我克：日主克目标
+    if ELEMENT_CONQUEST.get(day_element) == target_element:
+        return "偏财" if same_yin_yang else "正财"
+    
+    # 克我：目标克日主
+    if ELEMENT_CONQUEST.get(target_element) == day_element:
+        return "七杀" if same_yin_yang else "正官"
+    
+    # 生我：目标生日主
+    if ELEMENT_GENERATION.get(target_element) == day_element:
+        return "偏印" if same_yin_yang else "正印"
+    
+    return "未知"
+
+
+def analyze_elements(pillars: list) -> schemas.ElementAnalysis:
+    """分析五行分布"""
+    element_count = {"木": 0, "火": 0, "土": 0, "金": 0, "水": 0}
+    
+    # 统计天干和地支藏干的五行
+    for pillar in pillars:
+        if pillar:
+            # 天干五行
+            element_count[pillar.element] = element_count.get(pillar.element, 0) + 1
+            
+            # 地支藏干五行
+            hidden_stems = get_hidden_stems(pillar.branch)
+            for stem in hidden_stems:
+                stem_element = FIVE_ELEMENTS.get(stem)
+                if stem_element:
+                    element_count[stem_element] = element_count.get(stem_element, 0) + 0.3  # 藏干权重较低
+    
+    # 找出主导五行
+    dominant_element = max(element_count.items(), key=lambda x: x[1])[0] if element_count else None
+    
+    # 找出缺失的五行
+    missing_elements = [elem for elem, count in element_count.items() if count == 0]
+    
+    # 判断五行平衡
+    max_count = max(element_count.values()) if element_count.values() else 0
+    min_count = min(element_count.values()) if element_count.values() else 0
+    balance_diff = max_count - min_count
+    
+    if balance_diff <= 1:
+        balance_status = "五行较为平衡"
+    elif balance_diff <= 2:
+        balance_status = "五行略有偏颇"
+    else:
+        balance_status = "五行明显失衡"
+    
+    return schemas.ElementAnalysis(
+        element_count=element_count,
+        dominant_element=dominant_element,
+        missing_elements=missing_elements,
+        element_balance=balance_status
+    )
+
+
+def analyze_ten_gods(year_pillar, month_pillar, day_pillar, hour_pillar) -> schemas.TenGodAnalysis:
+    """分析十神"""
+    day_stem = day_pillar.stem
+    
+    year_ten_god = get_ten_god(day_stem, year_pillar.stem) if year_pillar else None
+    month_ten_god = get_ten_god(day_stem, month_pillar.stem) if month_pillar else None
+    hour_ten_god = get_ten_god(day_stem, hour_pillar.stem) if hour_pillar else None
+    
+    # 统计十神分布
+    ten_god_count = {}
+    for tg in [year_ten_god, month_ten_god, hour_ten_god]:
+        if tg:
+            ten_god_count[tg] = ten_god_count.get(tg, 0) + 1
+    
+    # 生成十神总结
+    summary_parts = []
+    if ten_god_count.get("正官") or ten_god_count.get("七杀"):
+        summary_parts.append("官杀较旺，有领导力和责任感")
+    if ten_god_count.get("正财") or ten_god_count.get("偏财"):
+        summary_parts.append("财星较旺，财运较好")
+    if ten_god_count.get("食神") or ten_god_count.get("伤官"):
+        summary_parts.append("食伤较旺，才华横溢")
+    if ten_god_count.get("正印") or ten_god_count.get("偏印"):
+        summary_parts.append("印星较旺，学习能力强")
+    
+    ten_god_summary = "；".join(summary_parts) if summary_parts else "十神分布较为均衡"
+    
+    return schemas.TenGodAnalysis(
+        year_ten_god=year_ten_god,
+        month_ten_god=month_ten_god,
+        day_ten_god="日主",
+        hour_ten_god=hour_ten_god,
+        ten_god_summary=ten_god_summary
+    )
+
+
+def analyze_use_god(day_master_element: str, element_analysis: schemas.ElementAnalysis) -> tuple:
+    """
+    分析用神和忌神
+    简化版本：根据五行平衡情况判断
+    """
+    element_count = element_analysis.element_count
+    day_element = day_master_element
+    
+    # 计算日主的力量
+    day_power = element_count.get(day_element, 0)
+    
+    # 计算生助日主的力量（生我的五行）
+    generate_element = None
+    for elem, gen_elem in ELEMENT_GENERATION.items():
+        if gen_elem == day_element:
+            generate_element = elem
+            break
+    
+    generate_power = element_count.get(generate_element, 0) if generate_element else 0
+    
+    # 计算总力量
+    total_support = day_power + generate_power
+    
+    # 计算克制日主的力量（克我的五行）
+    control_element = None
+    for elem, conq_elem in ELEMENT_CONQUEST.items():
+        if conq_elem == day_element:
+            control_element = elem
+            break
+    
+    control_power = element_count.get(control_element, 0) if control_element else 0
+    
+    # 判断身强身弱
+    if total_support > control_power + 1:
+        # 身强，用神为克泄耗
+        use_god = control_element or ELEMENT_GENERATION.get(day_element) or ELEMENT_CONQUEST.get(day_element)
+        avoid_god = generate_element or day_element
+    else:
+        # 身弱，用神为生扶
+        use_god = generate_element or day_element
+        avoid_god = control_element
+    
+    return use_god, avoid_god
+
+
 @app.post("/bazi", response_model=schemas.BaziResponse)
 def calculate_bazi(payload: schemas.BaziRequest, db: Session = Depends(get_db)):
     """
@@ -253,6 +467,20 @@ def calculate_bazi(payload: schemas.BaziRequest, db: Session = Depends(get_db)):
                 # If time parsing fails, just skip hour pillar
                 print(f"Warning: Failed to parse birth_time '{payload.birth_time}': {time_error}")
 
+        # 添加地支藏干和十神信息
+        year_pillar.hidden_stems = get_hidden_stems(year_pillar.branch)
+        year_pillar.ten_god = get_ten_god(day_pillar.stem, year_pillar.stem)
+        
+        month_pillar.hidden_stems = get_hidden_stems(month_pillar.branch)
+        month_pillar.ten_god = get_ten_god(day_pillar.stem, month_pillar.stem)
+        
+        day_pillar.hidden_stems = get_hidden_stems(day_pillar.branch)
+        day_pillar.ten_god = "日主"
+        
+        if hour_pillar:
+            hour_pillar.hidden_stems = get_hidden_stems(hour_pillar.branch)
+            hour_pillar.ten_god = get_ten_god(day_pillar.stem, hour_pillar.stem)
+
         # Build summary
         summary_parts = [
             f"年柱：{year_pillar.stem}{year_pillar.branch}年（{year_pillar.element}，{year_pillar.animal}）",
@@ -266,6 +494,36 @@ def calculate_bazi(payload: schemas.BaziRequest, db: Session = Depends(get_db)):
             summary_parts.append("时柱：未提供出生时间")
         
         summary = " | ".join(summary_parts)
+        
+        # 进行详细分析
+        pillars_list = [year_pillar, month_pillar, day_pillar, hour_pillar]
+        element_analysis = analyze_elements(pillars_list)
+        ten_god_analysis = analyze_ten_gods(year_pillar, month_pillar, day_pillar, hour_pillar)
+        
+        # 分析用神忌神
+        use_god, avoid_god = analyze_use_god(day_pillar.element, element_analysis)
+        
+        # 生成分析总结
+        analysis_summary_parts = [
+            f"日主：{day_pillar.stem}（{day_pillar.element}）",
+            f"五行分布：{', '.join([f'{k}{int(v) if v == int(v) else v:.1f}个' for k, v in element_analysis.element_count.items()])}",
+            f"五行平衡：{element_analysis.element_balance}",
+            f"十神：{ten_god_analysis.ten_god_summary}",
+        ]
+        if use_god:
+            analysis_summary_parts.append(f"用神：{use_god}，忌神：{avoid_god if avoid_god else '无'}")
+        
+        analysis_summary = " | ".join(analysis_summary_parts)
+        
+        bazi_analysis = schemas.BaziAnalysis(
+            day_master=day_pillar.stem,
+            day_master_element=day_pillar.element,
+            element_analysis=element_analysis,
+            ten_god_analysis=ten_god_analysis,
+            use_god=use_god,
+            avoid_god=avoid_god,
+            analysis_summary=analysis_summary
+        )
 
         # 生成AI解读（可选，如果AI服务不可用则使用基础解读）
         interpretation = None
@@ -289,7 +547,8 @@ def calculate_bazi(payload: schemas.BaziRequest, db: Session = Depends(get_db)):
                         month_pillar.dict(),
                         day_pillar.dict(),
                         hour_pillar.dict() if hour_pillar else None,
-                        language="zh"
+                        language="zh",
+                        analysis=analysis_dict
                     )
                 except Exception as basic_error:
                     print(f"Warning: Failed to generate basic interpretation: {basic_error}")
@@ -302,7 +561,8 @@ def calculate_bazi(payload: schemas.BaziRequest, db: Session = Depends(get_db)):
                     month_pillar.dict(),
                     day_pillar.dict(),
                     hour_pillar.dict() if hour_pillar else None,
-                    language="zh"
+                    language="zh",
+                    analysis=analysis_dict
                 )
             except Exception:
                 # 最后的fallback
@@ -341,6 +601,7 @@ def calculate_bazi(payload: schemas.BaziRequest, db: Session = Depends(get_db)):
             hour_pillar=hour_pillar,
             summary=summary,
             interpretation=interpretation,
+            analysis=bazi_analysis,
             raw_input=payload
         )
     except Exception as calc_error:

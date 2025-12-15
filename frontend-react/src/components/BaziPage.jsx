@@ -48,11 +48,61 @@ function BaziPage({ onBack, language }) {
       }
       
       const data = await res.json();
-      // 显示完整的八字结果，包括AI解读
-      let displayResult = data.summary || "";
-      if (data.interpretation) {
-        displayResult += "\n\n【详细解读】\n" + data.interpretation;
+      
+      // 格式化显示结果
+      let displayResult = "";
+      
+      // 八字排盘
+      displayResult += "【八字排盘】\n";
+      displayResult += `年柱：${data.year_pillar.stem}${data.year_pillar.branch}（${data.year_pillar.element}${data.year_pillar.animal ? `，${data.year_pillar.animal}` : ''}）`;
+      if (data.year_pillar.ten_god) {
+        displayResult += ` [${data.year_pillar.ten_god}]`;
       }
+      displayResult += "\n";
+      
+      displayResult += `月柱：${data.month_pillar.stem}${data.month_pillar.branch}（${data.month_pillar.element}）`;
+      if (data.month_pillar.ten_god) {
+        displayResult += ` [${data.month_pillar.ten_god}]`;
+      }
+      displayResult += "\n";
+      
+      displayResult += `日柱：${data.day_pillar.stem}${data.day_pillar.branch}（${data.day_pillar.element}）[日主]`;
+      displayResult += "\n";
+      
+      if (data.hour_pillar) {
+        displayResult += `时柱：${data.hour_pillar.stem}${data.hour_pillar.branch}（${data.hour_pillar.element}）`;
+        if (data.hour_pillar.ten_god) {
+          displayResult += ` [${data.hour_pillar.ten_god}]`;
+        }
+        displayResult += "\n";
+      } else {
+        displayResult += "时柱：未提供\n";
+      }
+      
+      // 详细分析
+      if (data.analysis) {
+        displayResult += "\n【详细分析】\n";
+        displayResult += data.analysis.analysis_summary || "";
+        displayResult += "\n";
+        
+        // 五行分布可视化
+        if (data.analysis.element_analysis) {
+          displayResult += "\n【五行分布】\n";
+          const elementCount = data.analysis.element_analysis.element_count;
+          for (const [elem, count] of Object.entries(elementCount)) {
+            const bars = "█".repeat(Math.round(count * 2));
+            displayResult += `${elem}：${bars} ${count.toFixed(1)}\n`;
+          }
+          displayResult += `\n五行平衡：${data.analysis.element_analysis.element_balance}\n`;
+        }
+      }
+      
+      // AI解读
+      if (data.interpretation) {
+        displayResult += "\n【详细解读】\n";
+        displayResult += data.interpretation;
+      }
+      
       setResult(displayResult || JSON.stringify(data, null, 2));
     } catch (err) {
       console.error("Bazi calculation error:", err);
@@ -98,8 +148,17 @@ function BaziPage({ onBack, language }) {
             {loading ? t.baziPage.calculating : t.baziPage.calculateButton}
           </button>
         </form>
-        <div className="result-box">
-          {result || t.baziPage.placeholder}
+        <div className="result-box bazi-result">
+          {result ? (
+            <pre style={{ 
+              whiteSpace: 'pre-wrap', 
+              fontFamily: 'inherit',
+              margin: 0,
+              lineHeight: '1.8'
+            }}>{result}</pre>
+          ) : (
+            t.baziPage.placeholder
+          )}
         </div>
       </div>
     </main>
