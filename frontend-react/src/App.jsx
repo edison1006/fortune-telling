@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react'
 import { translations } from './utils/translations';
 import Header from './components/Header';
 import HomePage from './components/HomePage';
+import AIChatWidget from './components/AIChatWidget';
 import './App.css';
 
 const ZodiacPage = lazy(() => import('./components/ZodiacPage'));
@@ -11,6 +12,7 @@ const BaziPage = lazy(() => import('./components/BaziPage'));
 const PalmFacePage = lazy(() => import('./components/PalmFacePage'));
 const NameTestPage = lazy(() => import('./components/NameTestPage'));
 const DailyFortunePage = lazy(() => import('./components/DailyFortunePage'));
+const ReportCenterPage = lazy(() => import('./components/ReportCenterPage'));
 
 function PageFallback() {
   return (
@@ -65,6 +67,8 @@ function App() {
         return <NameTestPage onBack={navigateHome} language={language} />;
       case "daily":
         return <DailyFortunePage onBack={navigateHome} language={language} />;
+      case "reports":
+        return <ReportCenterPage onBack={navigateHome} language={language} />;
       default:
         return <HomePage onNavigate={navigateTo} language={language} />;
     }
@@ -74,6 +78,7 @@ function App() {
     <div className="app">
       <Header
         onNavigateHome={navigateHome}
+        onNavigateToReports={() => navigateTo("reports")}
         language={language}
         onLanguageChange={handleChangeLanguage}
         showLanguageMenu={showLanguageMenu}
@@ -84,6 +89,7 @@ function App() {
       <Suspense fallback={<PageFallback />}>
         {renderPage()}
       </Suspense>
+      <AIChatWidget language={language} />
     </div>
   );
 }

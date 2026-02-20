@@ -1,8 +1,9 @@
 import { translations } from '../utils/translations';
 
-function Header({ onNavigateHome, language, onLanguageChange, showLanguageMenu, onToggleLanguageMenu, languageMenuRef, currentPage }) {
+function Header({ onNavigateHome, onNavigateToReports, language, onLanguageChange, showLanguageMenu, onToggleLanguageMenu, languageMenuRef, currentPage }) {
   const t = translations[language] || translations.zh;
   const languageLabel = language === "en" ? "English" : language === "mi" ? "Māori" : "中文";
+  const reportsLabel = (t.reportCenter && t.reportCenter.title) ? t.reportCenter.title : (language === "zh" ? "报告中心" : "Report Center");
 
   return (
     <header className="header">
@@ -11,6 +12,11 @@ function Header({ onNavigateHome, language, onLanguageChange, showLanguageMenu, 
           FutureAlgo
         </div>
         <div className="header-right">
+          {onNavigateToReports && (
+            <button type="button" className="btn btn-secondary header-nav-btn" onClick={onNavigateToReports}>
+              {reportsLabel}
+            </button>
+          )}
           <div className="language-selector" ref={languageMenuRef}>
             <button
               type="button"

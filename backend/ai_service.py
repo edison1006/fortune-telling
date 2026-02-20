@@ -394,3 +394,51 @@ def get_personality_trait(element: str, language: str) -> str:
     }
     return traits.get(language, {}).get(element, "")
 
+
+def chat_with_master(messages: list, language: str = "zh") -> str:
+    """
+    Chat with the AI fortune master. Accepts a list of {role, content} and returns
+    the assistant's reply. Uses OpenAI if available; otherwise returns a fallback.
+    """
+    system_prompts = {
+        "zh": "你是「AI 大师」在线解读助手，擅长八字、星座、塔罗、运势等命理与心理层面的解读。"
+        "回答时保持温和、理性、不夸大不恐吓；可结合传统文化与心理学给出建议，避免具体事件预言。"
+        "用简洁易懂的中文回复。",
+        "en": "You are the AI Fortune Master assistant, skilled in Bazi, zodiac, tarot, and fortune interpretation. "
+        "Keep replies warm, rational, and non-alarming; you may combine tradition with psychology for advice, "
+        "but avoid predicting specific events. Reply in clear, concise English.",
+        "mi": "Ko koe te kaiāwhina AI Fortune Master, he tohunga ki te Bazi, te whetū, te tarot me te whakamārama waimarie. "
+        "Kia ngāwari, kia tōtika ō whakautu; ka taea te whakauru i ngā tikanga tawhito me te hinengaro, "
+        "engari kaua e matapae kaupapa. Whakautu mai ki te reo Māori māmā.",
+    }
+    system_content = system_prompts.get(language, system_prompts["zh"])
+
+    if OPENAI_AVAILABLE:
+        api_key = os.getenv("OPENAI_API_KEY")
+        if api_key:
+            try:
+                from openai import OpenAI
+                client = OpenAI(api_key=api_key)
+                api_messages = [{"role": "system", "content": system_content}]
+                for m in messages:
+                    role = (m.get("role") or "user").lower()
+                    if role == "system":
+                        continue
+                    api_messages.append({"role": role if role in ("user", "assistant") else "user", "content": (m.get("content") or "").strip()})
+                response = client.chat.completions.create(
+                    model="gpt-3.5-turbo",
+                    messages=api_messages,
+                    max_tokens=500,
+                    temperature=0.7,
+                )
+                return (response.choices[0].message.content or "").strip()
+            except Exception as e:
+                print(f"OpenAI chat error: {e}")
+
+    fallbacks = {
+        "zh": "暂时无法连接解读服务。请稍后再试，或先试试八字、塔罗等其他功能。",
+        "en": "The interpretation service is temporarily unavailable. Please try again later or use Bazi, Tarot, etc.",
+        "mi": "Kāore e taea te hono ki te ratonga whakamārama. Tēnā whakamātau ā muri ake, ka taea rānei te Bazi, Tarot.",
+    }
+    return fallbacks.get(language, fallbacks["en"])
+

@@ -24,12 +24,14 @@ except ImportError:
 # Try to import the AI service; if it fails the core API still works
 try:
     try:
-        from .ai_service import generate_bazi_interpretation
+        from .ai_service import generate_bazi_interpretation, chat_with_master
     except ImportError:
-        from ai_service import generate_bazi_interpretation
+        from ai_service import generate_bazi_interpretation, chat_with_master
     AI_SERVICE_AVAILABLE = True
 except ImportError:
     AI_SERVICE_AVAILABLE = False
+    def chat_with_master(messages, language="zh"):
+        return "Interpretation service is not available." if language == "en" else "解读服务暂不可用。"
     print("Warning: AI service not available, will use basic interpretation")
 
 # Try to create database tables; if this fails the API can still respond
@@ -648,6 +650,17 @@ def calculate_bazi(payload: schemas.BaziRequest, db: Session = Depends(get_db)):
         error_msg = f"Bazi calculation failed: {str(calc_error)}"
         print(f"Error in calculate_bazi: {error_msg}")
         raise HTTPException(status_code=500, detail=error_msg)
+
+@app.post("/chat", response_model=schemas.ChatResponse)
+def chat(payload: schemas.ChatRequest):
+    """
+    Chat with the AI fortune master. Send messages and receive a reply.
+    """
+    messages = [{"role": m.role, "content": m.content} for m in payload.messages]
+    lang = (payload.language or "zh").strip() or "zh"
+    reply = chat_with_master(messages, language=lang)
+    return schemas.ChatResponse(reply=reply)
+
 
 @app.post("/ocr/face")
 async def ocr_face(image: UploadFile = File(...)):

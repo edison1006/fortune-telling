@@ -42,6 +42,10 @@ export const translations = {
       title: "今日运势",
       description: "查看今日运势与宜忌",
     },
+    aiMaster: {
+      title: "AI 大师在线解读",
+      description: "与 AI 大师对话，八字、星座、塔罗一站式解答",
+    },
     
     // Pages
     zodiacPage: {
@@ -104,6 +108,33 @@ export const translations = {
       resultPlaceholder: "此处将显示 OCR 提取的文本与简要说明。",
       errorUpload: "上传或分析失败",
     },
+    aiChatPage: {
+      title: "AI 大师在线解读",
+      subtitle: "有任何命理、运势方面的问题，都可以问我",
+      placeholder: "输入您的问题…",
+      send: "发送",
+      thinking: "大师正在思考…",
+      error: "发送失败，请稍后再试",
+      welcome: "您好，我是 AI 大师。您可以问我关于八字、星座、塔罗、运势等任何问题，我会尽量用简洁易懂的方式为您解读。",
+      lock: "锁定在侧边",
+      unlock: "解锁",
+    },
+    reportCenter: {
+      title: "运势报告中心",
+      subtitle: "算完后可在此查看与下载各类运势报告",
+      daily: "今日运势",
+      weekly: "本周运势",
+      monthly: "本月运势",
+      annual: "流年分析",
+      specialReports: "专项报告",
+      wealth: "财运报告",
+      love: "感情报告",
+      career: "事业报告",
+      downloadPdf: "下载 PDF",
+      freeCountRemaining: "免费下载剩余 {{n}} 次",
+      freeCountExhausted: "免费次数已用完",
+      downloadSuccess: "已下载",
+    },
   },
   en: {
     // Header
@@ -146,6 +177,10 @@ export const translations = {
     dailyFortune: {
       title: "Daily Fortune",
       description: "Today's fortune and auspicious tips",
+    },
+    aiMaster: {
+      title: "AI Master Online",
+      description: "Chat with the AI master for Bazi, zodiac, tarot & more",
     },
     
     // Pages
@@ -209,6 +244,33 @@ export const translations = {
       resultPlaceholder: "OCR-extracted text and summary will appear here.",
       errorUpload: "Upload or analysis failed",
     },
+    aiChatPage: {
+      title: "AI Master Online",
+      subtitle: "Ask me anything about Bazi, zodiac, tarot, or fortune",
+      placeholder: "Type your question…",
+      send: "Send",
+      thinking: "Master is thinking…",
+      error: "Failed to send. Please try again.",
+      welcome: "Hello, I'm the AI Master. You can ask me about Bazi, zodiac, tarot, fortune, or any related topic—I'll keep my answers clear and concise.",
+      lock: "Lock to side",
+      unlock: "Unlock",
+    },
+    reportCenter: {
+      title: "Fortune Report Center",
+      subtitle: "View and download your reports after a reading",
+      daily: "Today's Fortune",
+      weekly: "Weekly Fortune",
+      monthly: "Monthly Fortune",
+      annual: "Annual / Flowing Year",
+      specialReports: "Special Reports",
+      wealth: "Wealth Report",
+      love: "Love Report",
+      career: "Career Report",
+      downloadPdf: "Download PDF",
+      freeCountRemaining: "{{n}} free download(s) left",
+      freeCountExhausted: "No free downloads left",
+      downloadSuccess: "Downloaded",
+    },
   },
   mi: {
     // Header
@@ -252,7 +314,11 @@ export const translations = {
       title: "Waimarie o te Rā",
       description: "Te waimarie o tēnei rā",
     },
-    
+    aiMaster: {
+      title: "AI Master Mā Rorohiko",
+      description: "Kōrerorero ki te AI mō Bazi, whetū, tarot me ētahi atu",
+    },
+
     // Pages
     zodiacPage: {
       title: "Te Matakite Whetū Pākehā",
@@ -313,6 +379,33 @@ export const translations = {
       resultLabel: "Hua pānui",
       resultPlaceholder: "Ka puta ki konei te kuputohu OCR me te whakarāpopototanga.",
       errorUpload: "I rahua te tukuna, te tātari rānei",
+    },
+    aiChatPage: {
+      title: "AI Master Mā Rorohiko",
+      subtitle: "Pātai mai mō Bazi, whetū, tarot, waimarie rānei",
+      placeholder: "Tuhia tō pātai…",
+      send: "Tukuna",
+      thinking: "E whakaaro ana te Master…",
+      error: "I rahua te tukuna. Tēnā whakamātau anō.",
+      welcome: "Kia ora, ko ahau te AI Master. Ka taea e koe te pātai mō Bazi, whetū, tarot, waimarie—ka whakamārama māmā ahau.",
+      lock: "Lock ki te taha",
+      unlock: "Wewete",
+    },
+    reportCenter: {
+      title: "Te Pokapū Pūrongo Waimarie",
+      subtitle: "Tirohia, tikiake ō pūrongo i muri i te pānui",
+      daily: "Waimarie o Tēnei Rā",
+      weekly: "Waimarie o te Wiki",
+      monthly: "Waimarie o te Marama",
+      annual: "Tātari Tau",
+      specialReports: "Ngā Pūrongo Motuhake",
+      wealth: "Pūrongo Taonga",
+      love: "Pūrongo Aroha",
+      career: "Pūrongo Mahi",
+      downloadPdf: "Tikiake PDF",
+      freeCountRemaining: "{{n}} tikiake utu-kore e toe ana",
+      freeCountExhausted: "Kua pau ngā tikiake utu-kore",
+      downloadSuccess: "Kua tikiake",
     },
   },
 };

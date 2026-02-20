@@ -88,3 +88,17 @@ class BaziResponse(BaseModel):
     analysis: Optional[BaziAnalysis] = None  # Detailed structural analysis
     raw_input: BaziRequest
 
+
+class ChatMessage(BaseModel):
+    role: str  # "user" | "assistant" | "system"
+    content: str
+
+
+class ChatRequest(BaseModel):
+    messages: List[ChatMessage]
+    language: Optional[str] = "zh"
+
+
+class ChatResponse(BaseModel):
+    reply: str
+
