@@ -258,12 +258,25 @@ body {
   font-size: 1.2rem;
   color: var(--text-secondary);
   font-weight: 300;
+  margin-bottom: 1.5rem;
+}
+
+.hero-cta {
+  font-size: 1.35rem;
+  padding: 1rem 2.5rem;
+  min-width: 12rem;
+  box-shadow: 0 0 24px var(--glow-violet);
+}
+
+/* Fortune grid section */
+.cards-section {
+  scroll-margin-top: 1rem;
 }
 
 /* Feature cards grid */
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
   margin-top: 2rem;
 }

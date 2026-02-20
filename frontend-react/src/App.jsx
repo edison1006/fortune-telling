@@ -9,6 +9,8 @@ const NumerologyPage = lazy(() => import('./components/NumerologyPage'));
 const TarotPage = lazy(() => import('./components/TarotPage'));
 const BaziPage = lazy(() => import('./components/BaziPage'));
 const PalmFacePage = lazy(() => import('./components/PalmFacePage'));
+const NameTestPage = lazy(() => import('./components/NameTestPage'));
+const DailyFortunePage = lazy(() => import('./components/DailyFortunePage'));
 
 function PageFallback() {
   return (
@@ -59,6 +61,10 @@ function App() {
         return <BaziPage onBack={navigateHome} language={language} />;
       case "palmface":
         return <PalmFacePage onBack={navigateHome} language={language} />;
+      case "nametest":
+        return <NameTestPage onBack={navigateHome} language={language} />;
+      case "daily":
+        return <DailyFortunePage onBack={navigateHome} language={language} />;
       default:
         return <HomePage onNavigate={navigateTo} language={language} />;
     }

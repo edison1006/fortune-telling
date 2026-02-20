@@ -1,0 +1,21 @@
+import { translations } from '../utils/translations';
+
+function DailyFortunePage({ onBack, language }) {
+  const t = translations[language] || translations.en;
+  const pageT = t.dailyFortunePage || { title: 'Daily Fortune', description: "Today's fortune and auspicious tips. This feature is coming soon." };
+
+  return (
+    <main className="main">
+      <button type="button" className="btn back-button" onClick={onBack}>
+        ← {t.backToHome}
+      </button>
+      <div className="page-section">
+        <h2>{pageT.title}</h2>
+        <p>{pageT.description}</p>
+        <p className="result-placeholder">{pageT.comingSoon || 'Coming soon.'}</p>
+      </div>
+    </main>
+  );
+}
+
+export default DailyFortunePage;

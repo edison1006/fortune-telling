@@ -7,29 +7,40 @@ export const translations = {
     account: "账户",
     
     // Homepage
+    home: {
+      centerTitle: "在线算命中心",
+      heroSubtitle: "看不清未来？也许你只是缺一把解开命运的钥匙",
+      ctaButton: "开始测算",
+    },
     heroTitle: "未来算法",
     heroSubtitle: "看不清未来？也许你只是缺一把解开命运的钥匙",
-    
-    // Features（主页 5 个功能卡片）
     zodiac: {
-      title: "西方占星术（星座）",
-      description: "根据出生日期查询您的星座与核心性格关键词",
+      title: "星座运势",
+      description: "根据出生日期查询星座与运势",
     },
     bazi: {
-      title: "中国八字",
-      description: "以传统四柱八字体系分析命局与人生走势",
+      title: "八字算命",
+      description: "生辰八字，四柱命理分析",
     },
     tarot: {
-      title: "塔罗牌 Tarot",
-      description: "抽取一张塔罗牌，获取此刻的指引信息",
+      title: "塔罗牌占卜",
+      description: "抽取塔罗牌，获取当下指引",
     },
     palmFace: {
       title: "手相 / 面相",
-      description: "通过手相与面相特征，感知性格与运势走向",
+      description: "上传手部或面部照片，AI 图片分析",
     },
     numerology: {
-      title: "数字命理 Numerology",
-      description: "用出生日期计算生命路径数字与数字能量",
+      title: "数字命理",
+      description: "生命路径数字与数字能量",
+    },
+    nameTest: {
+      title: "姓名测试",
+      description: "解析姓名笔画与五行数理",
+    },
+    dailyFortune: {
+      title: "今日运势",
+      description: "查看今日运势与宜忌",
     },
     
     // Pages
@@ -71,6 +82,16 @@ export const translations = {
       calculating: "计算中...",
       placeholder: "这里将显示您的八字年柱和概要说明。",
     },
+    nameTestPage: {
+      title: "姓名测试",
+      description: "解析姓名笔画与五行数理，了解名字与命运的关联。",
+      comingSoon: "功能即将上线，敬请期待。",
+    },
+    dailyFortunePage: {
+      title: "今日运势",
+      description: "查看今日运势、宜忌与开运建议。",
+      comingSoon: "功能即将上线，敬请期待。",
+    },
     palmFacePage: {
       title: "手相 / 面相",
       description: "上传面部或手部照片，获取基于 OCR 的解读。",
@@ -91,29 +112,40 @@ export const translations = {
     account: "Account",
     
     // Homepage
+    home: {
+      centerTitle: "Fortune Center",
+      heroSubtitle: "Can't see the future? Perhaps you just need the key to unlock your destiny.",
+      ctaButton: "Start Reading",
+    },
     heroTitle: "FutureAlgo",
     heroSubtitle: "Can't see the future? Perhaps you just need the key to unlock your destiny",
-    
-    // Features
     zodiac: {
-      title: "Western Astrology (Zodiac)",
-      description: "Find your zodiac sign and core personality keywords from your birth date",
+      title: "Zodiac & Horoscope",
+      description: "Your sign and daily horoscope by birth date",
     },
     bazi: {
-      title: "Chinese Bazi",
-      description: "Use the traditional Four Pillars system to analyze your destiny chart",
+      title: "Bazi (Four Pillars)",
+      description: "Birth date and time destiny analysis",
     },
     tarot: {
-      title: "Tarot Cards",
-      description: "Draw a tarot card for quick insight into your current situation",
+      title: "Tarot Reading",
+      description: "Draw a card for guidance",
     },
     palmFace: {
       title: "Palm / Face Reading",
-      description: "Read character and destiny through palm lines and facial features",
+      description: "Upload a photo for AI image analysis",
     },
     numerology: {
       title: "Numerology",
-      description: "Calculate your Life Path number from your date of birth",
+      description: "Life Path number and number energy",
+    },
+    nameTest: {
+      title: "Name Test",
+      description: "Name strokes and five-elements analysis",
+    },
+    dailyFortune: {
+      title: "Daily Fortune",
+      description: "Today's fortune and auspicious tips",
     },
     
     // Pages
@@ -155,6 +187,16 @@ export const translations = {
       calculating: "Calculating...",
       placeholder: "Your Bazi year pillar and summary will appear here.",
     },
+    nameTestPage: {
+      title: "Name Test",
+      description: "Analyze name strokes and five-elements; explore the link between name and destiny.",
+      comingSoon: "Coming soon.",
+    },
+    dailyFortunePage: {
+      title: "Daily Fortune",
+      description: "Today's fortune, auspicious tips and advice.",
+      comingSoon: "Coming soon.",
+    },
     palmFacePage: {
       title: "Palm / Face Reading",
       description: "Upload a photo of your face or palm to get an OCR-based reading.",
@@ -175,29 +217,40 @@ export const translations = {
     account: "Pūkete",
     
     // Homepage
+    home: {
+      centerTitle: "Te Pokapū Matakite",
+      heroSubtitle: "Kāore e kitea te heke mai? Tērā pea hei tika māu hei kī rānei ki te whakatuwhera i tō ara ora.",
+      ctaButton: "Tīmata te Pānui",
+    },
     heroTitle: "FutureAlgo",
     heroSubtitle: "Kāore e kitea te heke mai? Tērā pea hei tika māu hei kī rānei ki te whakatuwhera i tō ara ora",
-    
-    // Features
     zodiac: {
-      title: "Te Matakite Whetū Pākehā",
-      description: "Kimihia tō tohu whetū me ngā kupu matua o tō āhua i runga i tō rā whānau",
+      title: "Whetū / Horoscope",
+      description: "Tō tohu whetū me ngā kupu matua",
     },
     bazi: {
-      title: "Bazi Hainamana",
-      description: "Whakamahia te pūnaha pou e whā ki te tātari i tō mahere ora",
+      title: "Bazi (Ngā Pou e Whā)",
+      description: "Tātari oranga mai i te rā, te wā whānau",
     },
     tarot: {
-      title: "Ngā Kāri Tarot",
-      description: "Tohua he kāri tarot hei ārahi mō tō āhuatanga o nāianei",
+      title: "Tarot",
+      description: "Tohua he kāri hei ārahi",
     },
     palmFace: {
-      title: "Tohu Ringa / Kanohi",
-      description: "Pānuihia te tangata me te ara ora mā ngā rārangi ringa me ngā āhuatanga kanohi",
+      title: "Ringa / Kanohi",
+      description: "Tukuna whakaahua mō te tātari AI",
     },
     numerology: {
-      title: "Tau Matakite Numerology",
-      description: "Tātaihia tō tau Ara Ora mai i tō rā whānau",
+      title: "Numerology",
+      description: "Tau Ara Ora me te kaha tau",
+    },
+    nameTest: {
+      title: "Whakamātautau Ingoa",
+      description: "Ngā tōhu ingoa me ngā rima",
+    },
+    dailyFortune: {
+      title: "Waimarie o te Rā",
+      description: "Te waimarie o tēnei rā",
     },
     
     // Pages
@@ -238,6 +291,16 @@ export const translations = {
       calculateButton: "Tātai Bazi",
       calculating: "E tātai ana...",
       placeholder: "Ka puta ki konei tō pou tau Bazi me te whakarāpopototanga.",
+    },
+    nameTestPage: {
+      title: "Whakamātautau Ingoa",
+      description: "Tātari ngā tōhu ingoa me ngā rima; tūhura te hononga ingoa me te oranga.",
+      comingSoon: "Ka tae mai ā tōna wā.",
+    },
+    dailyFortunePage: {
+      title: "Waimarie o te Rā",
+      description: "Te waimarie o tēnei rā me ngā tohutohu.",
+      comingSoon: "Ka tae mai ā tōna wā.",
     },
     palmFacePage: {
       title: "Tohu Ringa / Kanohi",
