@@ -12,7 +12,11 @@ const BaziPage = lazy(() => import('./components/BaziPage'));
 const PalmFacePage = lazy(() => import('./components/PalmFacePage'));
 const NameTestPage = lazy(() => import('./components/NameTestPage'));
 const DailyFortunePage = lazy(() => import('./components/DailyFortunePage'));
+const CheckInPage = lazy(() => import('./components/CheckInPage'));
 const ReportCenterPage = lazy(() => import('./components/ReportCenterPage'));
+const CommunityPage = lazy(() => import('./components/CommunityPage'));
+const KnowledgeBasePage = lazy(() => import('./components/KnowledgeBasePage'));
+const TestPlaceholderPage = lazy(() => import('./components/TestPlaceholderPage'));
 
 function PageFallback() {
   return (
@@ -27,7 +31,7 @@ function PageFallback() {
 
 function App() {
   const [currentPage, setCurrentPage] = useState("home");
-  const [language, setLanguage] = useState("en");
+  const [language, setLanguage] = useState("zh");
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const languageMenuRef = useRef(null);
 
@@ -67,8 +71,21 @@ function App() {
         return <NameTestPage onBack={navigateHome} language={language} />;
       case "daily":
         return <DailyFortunePage onBack={navigateHome} language={language} />;
+      case "checkin":
+        return <CheckInPage onBack={navigateHome} language={language} />;
       case "reports":
         return <ReportCenterPage onBack={navigateHome} language={language} />;
+      case "community":
+        return <CommunityPage onBack={navigateHome} language={language} />;
+      case "knowledge":
+        return <KnowledgeBasePage onBack={navigateHome} language={language} />;
+      case "futurepartner":
+      case "pastlife":
+      case "personality":
+      case "luckynumber":
+      case "wealthindex":
+      case "babynaming":
+        return <TestPlaceholderPage onBack={navigateHome} language={language} pageKey={currentPage} />;
       default:
         return <HomePage onNavigate={navigateTo} language={language} />;
     }
@@ -79,6 +96,7 @@ function App() {
       <Header
         onNavigateHome={navigateHome}
         onNavigateToReports={() => navigateTo("reports")}
+        onNavigate={navigateTo}
         language={language}
         onLanguageChange={handleChangeLanguage}
         showLanguageMenu={showLanguageMenu}
